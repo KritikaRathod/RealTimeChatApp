@@ -9,9 +9,14 @@ function SignUp() {
   let [userName, setuserName] = useState("");
   let [userEmail, setuserEmail] = useState("");
   let [password, setpassword] = useState("");
+let [loading,setLoading]=useState(false);
+  let[err,setErr]=useState("")
+
+
 
   const handlesignup = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       let result = await axios.post(
         `${serverurl}/api/auth/signup`,
@@ -26,8 +31,13 @@ function SignUp() {
       setuserName("")
        setuserEmail("");
       setpassword("");
-    } catch (error) {
+      setLoading(false)
+      setErr("")
+    } 
+    catch (error) {
       console.log(error)
+      setLoading(false);
+      setErr(error?.response?.data?.message)
     }
   };
 
@@ -75,8 +85,10 @@ function SignUp() {
             </span>
           </div>
 
-          <button className='p-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-200 shadow-lg text-[20px] w-[200px] mt-[20px] font-semibold hover:shadow-inner'>
-            signup
+          {err && <p className='text-red-500'>{"*"+err}</p>}
+
+          <button className='p-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-200 shadow-lg text-[20px] w-[200px] mt-[20px] font-semibold hover:shadow-inner'disabled={loading}>
+            {loading?"Loading...":"sign up"}
           </button>
 
           <p className='cursor-pointer' onClick={() => navigate("/login")}>

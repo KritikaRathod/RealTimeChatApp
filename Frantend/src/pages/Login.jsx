@@ -8,9 +8,12 @@ function Login() {
   let [show, setshow] = useState(false);
   let [userEmail, setuserEmail] = useState("");
   let [password, setpassword] = useState("");
+  let [loading,setLoading]=useState(false);
+  let[err,setErr]=useState("")
 
   const handlelogin = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       let result = await axios.post(
         `${serverurl}/api/auth/login`,
@@ -24,8 +27,12 @@ function Login() {
       console.log(result)
       setuserEmail("");
       setpassword("");
+      setLoading(false);
     } catch (error) {
       console.log(error)
+            setLoading(false);
+            setErr(error.response.data.message);
+
     }
   };
   return (
@@ -55,7 +62,9 @@ function Login() {
             <span className='absolute top-[9px] right-[20px] text-[19px] text-[#20c7ff] font-semibold cursor-pointer' onClick={() => setshow(prev => !prev)}>{`${show ? "hidden" : "show"}`}</span>
           </div>
 
-          <button className='p-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-200 shadow-lg text-[20px] w-[200px] mt-[20px] font-semibold hover:shadow-inner'>Login</button>
+          {err && <p className='text-red-500'>{"*"+err}</p>}
+
+          <button className='p-[20px] py-[10px] bg-[#20c7ff] rounded-2xl shadow-gray-200 shadow-lg text-[20px] w-[200px] mt-[20px] font-semibold hover:shadow-inner'disabled={loading}>{loading?"Loading...":"Login"}</button>
 
           <p className='cursor-pointer ' onClick={() => navigate("/signup")}> Want to create a new account ? <span className='text-[#20c7ff] text-[bold]'>Login</span></p>
 
