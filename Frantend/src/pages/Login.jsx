@@ -1,9 +1,33 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { serverurl } from '../main';
 
 function Login() {
   let navigate = useNavigate();
   let [show, setshow] = useState(false);
+  let [userEmail, setuserEmail] = useState("");
+  let [password, setpassword] = useState("");
+
+  const handlelogin = async (e) => {
+    e.preventDefault();
+    try {
+      let result = await axios.post(
+        `${serverurl}/api/auth/login`,
+        {
+         
+          email: userEmail,
+          password
+        },
+        { withCredentials: true }
+      );
+      console.log(result)
+      setuserEmail("");
+      setpassword("");
+    } catch (error) {
+      console.log(error)
+    }
+  };
   return (
     <div className="w-full h-[100vh] bg-slate-200 flex items-center justify-center">
       <div className='w-[500px] h-[600px] bg-white rounded-lg shadow-gray-400 shadow-lg flex flex-col gap-[30px]'>
@@ -14,19 +38,20 @@ function Login() {
           </h1>
         </div>
 
-        <form className='w-full flex flex-col gap-[20px] items-center'>
+        <form className='w-full flex flex-col gap-[20px] items-center' onSubmit={handlelogin}>
 
 
           <input
             type="email"
             placeholder='userEmail'
-            className='w-[90%] h-[50px] outline-none border-2 border-[#20c7ff] px-[20px] py-[10px] bg-white rounded-lg shadow-gray-200 shadow-lg text-gray-700 text-[19px]' />
+            className='w-[90%] h-[50px] outline-none border-2 border-[#20c7ff] px-[20px] py-[10px] bg-white rounded-lg shadow-gray-200 shadow-lg text-gray-700 text-[19px]'onChange={(e)=>setuserEmail(e.target.value)} value={userEmail}/>
 
           <div className='w-[90%] h-[50px] border-2 border-[#20c7ff] overflow-hidden rounded-lg  shadow-gray-200 shadow-lg relative'>
             <input
               type={show ? "text" : "password"}
               placeholder='password'
-              className='w-[90%] h-[50px] outline-none  px-[20px] py-[10px] bg-white  text-gray-700 text-[19px]' />
+              className='w-[90%] h-[50px] outline-none  px-[20px] py-[10px] bg-white  text-gray-700 text-[19px]'onChange={(e) => setpassword(e.target.value)}
+              value={password} />
             <span className='absolute top-[9px] right-[20px] text-[19px] text-[#20c7ff] font-semibold cursor-pointer' onClick={() => setshow(prev => !prev)}>{`${show ? "hidden" : "show"}`}</span>
           </div>
 

@@ -23,6 +23,9 @@ function SignUp() {
         { withCredentials: true }
       );
       console.log(result)
+      setuserName("")
+       setuserEmail("");
+      setpassword("");
     } catch (error) {
       console.log(error)
     }
